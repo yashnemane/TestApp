@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.repository.query.Param;
 
 import com.studentform.backend.requestDTOs.deleteStudentRequest;
 import com.studentform.backend.requestDTOs.getStudentRequest;
@@ -34,10 +36,7 @@ import com.studentform.backend.responseDTOs.deleteStudentResponse;
 import com.studentform.backend.responseDTOs.getStudentResponse;
 import com.studentform.backend.responseDTOs.registerStudentResponse;
 import com.studentform.backend.responseDTOs.updateStudentResponse;
-import com.studentform.backend.entities.Students;
 import com.studentform.backend.service.StudentService;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/students")
 @CrossOrigin(origins = "*")
@@ -46,24 +45,25 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    @GetMapping("/get/students")
+    @GetMapping(value="/get/students")
     public allStudentsResponse getAllStudents() {
         allStudentsResponse students = studentService.getAllStudents();
         return students;
     }
 
-    @GetMapping("/get/{student_id}")
-    public getStudentResponse getStudentById(@PathVariable("student_id") Long studentId) {
-        getStudentResponse student = studentService.getStudentById(studentId);
+    @GetMapping(value = "/get/{student_id}")
+    public getStudentResponse getStudent(
+        @PathVariable("student_id") Long studentId) {
+            getStudentResponse student = studentService.getStudentById(studentId);
         return student;
     }
             
-
     @PostMapping(value = "/registerStudent")
-        public registerStudentResponse createStudent(
-            @RequestBody registerStudentRequest req) {
+    public registerStudentResponse createStudent(
+        @RequestBody registerStudentRequest req) {
             return studentService.createStudent(req);
         }
+
 
     @PutMapping(value = "/update/{student_id}")
         public updateStudentResponse updateStudent(
@@ -72,9 +72,10 @@ public class StudentController {
             return studentService.updateStudent(studentId, req);
         }
 
-    @DeleteMapping(value = "/delete/{student_id}")
+    
+    @DeleteMapping(value = "/delete/{mobile_no}")
         public deleteStudentResponse deleteStudent(
-            @PathVariable("student_id") Long studentId) {
-            return studentService.deleteStudent(studentId);
+            @PathVariable("mobile_no") Long mobileNo) {
+            return studentService.deleteStudent(mobileNo);
         }
 }

@@ -9,12 +9,10 @@ import com.studentform.backend.responseDTOs.getStudentResponse;
 import com.studentform.backend.responseDTOs.updateStudentResponse;
 import com.studentform.backend.responseDTOs.registerStudentResponse;
 
-import java.util.List;
-
 public interface StudentService {
     allStudentsResponse getAllStudents();
-    getStudentResponse getStudentById(Long id);
+    getStudentResponse getStudentById(Long studentId);
     registerStudentResponse createStudent(registerStudentRequest students);
     updateStudentResponse updateStudent(Long id, updateStudentRequest updateStudentRequest);
-    deleteStudentResponse deleteStudent(Long id);
+    deleteStudentResponse deleteStudent(Long mobileNo);
 }

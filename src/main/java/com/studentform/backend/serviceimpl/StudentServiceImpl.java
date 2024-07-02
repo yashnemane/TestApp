@@ -42,13 +42,15 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public getStudentResponse getStudentById(Long studentId) {
-        getStudentResponse response =new getStudentResponse();
+        getStudentResponse response = new getStudentResponse();
+        System.out.println(studentId);
         Students student = null;
         student = studentRepository.findStudentById(studentId);
+        System.out.println(student);
         if(student!=null){
             response.setStudents(student);
             response.setSuccess(true);
-            response.setStudents(student);
+            response.setMessage("Successfully fetched.");
         } else {
             response.setSuccess(false);
             response.setMessage("No registered student.");
@@ -61,15 +63,23 @@ public class StudentServiceImpl implements StudentService {
     public registerStudentResponse createStudent(registerStudentRequest students) {
         registerStudentResponse response = new registerStudentResponse();
         Students student = new Students();
-        if(student.getFirstName()!=null && student.getLastName()!=null && student.getGrade()!=null && student.getMobileNo()!=null && student.getTargetExam()!=null){
-            student.setId(students.getId());
+        Students ifAlready = null;
+        ifAlready = studentRepository.findStudentByMobileNo(students.getMobileNo());
+        if(ifAlready!=null){
+            response.setMessage("User already registered with same mobile number.");
+            response.setSuccess(false);
+        }
+        else if(ifAlready==null && students.getFirstName()!=null && students.getLastName()!=null && students.getGrade()!=null && students.getMobileNo()!=null && students.getTargetExam()!=null){
+            student.setId(student.getId());
             student.setFirstName(students.getFirstName());
             student.setLastName(students.getLastName());
             student.setGrade(students.getGrade());
             student.setTargetExam(students.getTargetExam());
             student.setMobileNo(students.getMobileNo());
-            response.setStudents(student);
             studentRepository.save(student);
+            student = studentRepository.findStudentByMobileNo(students.getMobileNo());
+            student.setId(student.getId());
+            response.setStudents(student);
             response.setSuccess(true);
         } else {
             response.setSuccess(false);
@@ -101,6 +111,7 @@ public class StudentServiceImpl implements StudentService {
         }
         
         studentRepository.save(student);
+        student = studentRepository.findStudentByMobileNo(studentDetails.getMobileNo());
         response.setStudent(student);
         response.setSuccess(true);
         
