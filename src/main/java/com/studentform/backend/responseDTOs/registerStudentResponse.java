@@ -9,6 +9,7 @@ import lombok.Data;
 public class registerStudentResponse{
     Students student;
     private boolean success;
+    private String message;
 
     public void setStudents(Students students) {
         this.student = students;

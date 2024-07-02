@@ -29,6 +29,7 @@ import com.studentform.backend.requestDTOs.deleteStudentRequest;
 import com.studentform.backend.requestDTOs.getStudentRequest;
 import com.studentform.backend.requestDTOs.registerStudentRequest;
 import com.studentform.backend.requestDTOs.updateStudentRequest;
+import com.studentform.backend.responseDTOs.allStudentsResponse;
 import com.studentform.backend.responseDTOs.deleteStudentResponse;
 import com.studentform.backend.responseDTOs.getStudentResponse;
 import com.studentform.backend.responseDTOs.registerStudentResponse;
@@ -45,20 +46,15 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    
-            /*@Operation(summary = "Get student record by Id", responses = {
-                @ApiResponse(description = "Successful Operation", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = getStudentResponse.class))),
-                @ApiResponse(responseCode = "404", description = "Not found", content = @Content),
-                @ApiResponse(responseCode = "401", description = "Authentication Failure", content = @Content(schema = @Schema(hidden = true))) })
-            @GetMapping(value="/{student_id}")
-            public Students getStudent(
-                @PathVariable("student_id") Long studentId) {
-                    return studentService.getStudentById(studentId);
-                }*/
+    @GetMapping("/get/students")
+    public allStudentsResponse getAllStudents() {
+        allStudentsResponse students = studentService.getAllStudents();
+        return students;
+    }
 
     @GetMapping("/get/{student_id}")
-    public Students getStudentById(@PathVariable("student_id") Long studentId) {
-        Students student = studentService.getStudentById(studentId);
+    public getStudentResponse getStudentById(@PathVariable("student_id") Long studentId) {
+        getStudentResponse student = studentService.getStudentById(studentId);
         return student;
     }
             

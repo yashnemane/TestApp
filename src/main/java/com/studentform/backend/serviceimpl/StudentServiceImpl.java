@@ -4,6 +4,7 @@ import com.studentform.backend.entities.Students;
 import com.studentform.backend.repositories.StudentRepository;
 import com.studentform.backend.requestDTOs.registerStudentRequest;
 import com.studentform.backend.requestDTOs.updateStudentRequest;
+import com.studentform.backend.responseDTOs.allStudentsResponse;
 import com.studentform.backend.responseDTOs.deleteStudentResponse;
 import com.studentform.backend.responseDTOs.getStudentResponse;
 import com.studentform.backend.responseDTOs.registerStudentResponse;
@@ -23,33 +24,58 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
 
     @Override
-    public List<Students> getAllStudents() {
-        return studentRepository.findAll();
+    public allStudentsResponse getAllStudents() {
+        allStudentsResponse response = new allStudentsResponse();
+        List<Students> students=null;
+        students = studentRepository.findAll();
+        if(students!=null){
+            response.setStudents(students);
+            response.setSuccess(true);
+            response.setMessage("All students fetched successfully.");
+        } else{
+            response.setMessage("No students registered.");
+            response.setSuccess(false);
+        }
+
+        return response;
     }
 
     @Override
-    public Students getStudentById(Long studentId) {
-        Students student = studentRepository.findStudentById(studentId);
-        System.out.println(student);
+    public getStudentResponse getStudentById(Long studentId) {
+        getStudentResponse response =new getStudentResponse();
+        Students student = null;
+        student = studentRepository.findStudentById(studentId);
         if(student!=null){
-            return student;
+            response.setStudents(student);
+            response.setSuccess(true);
+            response.setStudents(student);
+        } else {
+            response.setSuccess(false);
+            response.setMessage("No registered student.");
         }
-        return null;
+
+        return response;
     }
 
     @Override
     public registerStudentResponse createStudent(registerStudentRequest students) {
         registerStudentResponse response = new registerStudentResponse();
         Students student = new Students();
-        student.setId(students.getId());
-        student.setFirstName(students.getFirstName());
-        student.setLastName(students.getLastName());
-        student.setGrade(students.getGrade());
-        student.setTargetExam(students.getTargetExam());
-        student.setMobileNo(students.getMobileNo());
-        response.setStudents(student);
-        studentRepository.save(student);
-        response.setSuccess(true);
+        if(student.getFirstName()!=null && student.getLastName()!=null && student.getGrade()!=null && student.getMobileNo()!=null && student.getTargetExam()!=null){
+            student.setId(students.getId());
+            student.setFirstName(students.getFirstName());
+            student.setLastName(students.getLastName());
+            student.setGrade(students.getGrade());
+            student.setTargetExam(students.getTargetExam());
+            student.setMobileNo(students.getMobileNo());
+            response.setStudents(student);
+            studentRepository.save(student);
+            response.setSuccess(true);
+        } else {
+            response.setSuccess(false);
+            response.setMessage("Please enter all details.");
+        }
+
         return response;
     }
 
