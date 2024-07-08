@@ -7,4 +7,5 @@ import com.studentform.backend.entities.Students;
 public class updateStudentResponse{
     Students student;
     private boolean success;
+    private String message;
 }

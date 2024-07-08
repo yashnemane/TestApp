@@ -52,4 +52,17 @@ public class Students {
     public void setFirstName() {
         firstName = this.firstName;
     }
+
+    public Students(Long id, String firstName, String lastName, Long grade, String targetExam, Long mobileNo) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.grade = grade;
+        this.targetExam =targetExam;
+        this.mobileNo = mobileNo;
+    }
+
+    public Students() {
+        
+    }
 }

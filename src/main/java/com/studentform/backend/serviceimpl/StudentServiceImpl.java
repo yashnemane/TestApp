@@ -10,11 +10,14 @@ import com.studentform.backend.responseDTOs.getStudentResponse;
 import com.studentform.backend.responseDTOs.registerStudentResponse;
 import com.studentform.backend.responseDTOs.updateStudentResponse;
 import com.studentform.backend.service.StudentService;
+
+import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -26,13 +29,14 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public allStudentsResponse getAllStudents() {
         allStudentsResponse response = new allStudentsResponse();
-        List<Students> students=null;
+        List<Students> students = Collections.emptyList();
         students = studentRepository.findAll();
-        if(students!=null){
+        if(!students.isEmpty()){
             response.setStudents(students);
             response.setSuccess(true);
             response.setMessage("All students fetched successfully.");
         } else{
+            response.setStudents(students);
             response.setMessage("No students registered.");
             response.setSuccess(false);
         }
@@ -43,10 +47,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public getStudentResponse getStudentById(Long studentId) {
         getStudentResponse response = new getStudentResponse();
-        System.out.println(studentId);
         Students student = null;
         student = studentRepository.findStudentById(studentId);
-        System.out.println(student);
         if(student!=null){
             response.setStudents(student);
             response.setSuccess(true);
@@ -64,28 +66,28 @@ public class StudentServiceImpl implements StudentService {
         registerStudentResponse response = new registerStudentResponse();
         Students student = new Students();
         Students ifAlready = null;
-        ifAlready = studentRepository.findStudentByMobileNo(students.getMobileNo());
-        if(ifAlready!=null){
+        ifAlready=studentRepository.findStudentByMobileNo(students.getMobileNo());
+        if (ifAlready != null) {
+            response.setStudent(ifAlready);
             response.setMessage("User already registered with same mobile number.");
             response.setSuccess(false);
-        }
-        else if(ifAlready==null && students.getFirstName()!=null && students.getLastName()!=null && students.getGrade()!=null && students.getMobileNo()!=null && students.getTargetExam()!=null){
-            student.setId(student.getId());
+        } else if (ifAlready==null && students.getFirstName() != null && students.getLastName() != null && students.getGrade() != null 
+        && students.getMobileNo() != null && students.getTargetExam() != null) {
             student.setFirstName(students.getFirstName());
             student.setLastName(students.getLastName());
             student.setGrade(students.getGrade());
             student.setTargetExam(students.getTargetExam());
             student.setMobileNo(students.getMobileNo());
             studentRepository.save(student);
-            student = studentRepository.findStudentByMobileNo(students.getMobileNo());
-            student.setId(student.getId());
-            response.setStudents(student);
+            Students savedStudent = studentRepository.findStudentByMobileNo(student.getMobileNo());
+            response.setStudents(savedStudent);
             response.setSuccess(true);
+            response.setMessage("User registered successfully.");
         } else {
             response.setSuccess(false);
             response.setMessage("Please enter all details.");
         }
-
+        
         return response;
     }
 
@@ -100,20 +102,21 @@ public class StudentServiceImpl implements StudentService {
         if(studentDetails.getLastName() != null){
             student.setLastName(studentDetails.getLastName());
         }
-        if(studentDetails.getGrade() != null){
+        if(studentDetails.getGrade() != 0){
             student.setGrade(studentDetails.getGrade());
         }
         if(studentDetails.getTargetExam() != null){
             student.setTargetExam(studentDetails.getTargetExam());
         }
-        if(studentDetails.getMobileNo() != null){
+        if(studentDetails.getMobileNo() != 0){
             student.setMobileNo(studentDetails.getMobileNo());
         }
         
         studentRepository.save(student);
-        student = studentRepository.findStudentByMobileNo(studentDetails.getMobileNo());
+        student = studentRepository.findStudentById(id);
         response.setStudent(student);
         response.setSuccess(true);
+        response.setMessage("Record updated successfully.");
         
         return response;
     }
@@ -126,7 +129,7 @@ public class StudentServiceImpl implements StudentService {
             studentRepository.delete(student);
             response.setStudent(student);
             response.setDeleted(true);
-            response.setMessage("Record Deleted sucesfully.");
+            response.setMessage("Record Deleted successfully.");
         } else {
             response.setDeleted(false);
             response.setMessage("No student found.");
