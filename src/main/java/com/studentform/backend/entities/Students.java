@@ -36,8 +36,11 @@ public class Students {
     @Column(name = "mobile_no")
     private Long mobileNo;
 
+    @Column(name="marks")
+    private Long marks;
 
-    public void setGrade() {
+
+    /*public void setGrade() {
         grade = this.grade;
     }
     public void setMobileNo() {
@@ -51,7 +54,7 @@ public class Students {
     }
     public void setFirstName() {
         firstName = this.firstName;
-    }
+    }*/
 
     public Students(Long id, String firstName, String lastName, Long grade, String targetExam, Long mobileNo) {
         this.id = id;

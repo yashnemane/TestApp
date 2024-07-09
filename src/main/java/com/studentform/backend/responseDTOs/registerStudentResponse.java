@@ -1,7 +1,6 @@
 package com.studentform.backend.responseDTOs;
 
 import com.studentform.backend.entities.Students;
-import lombok.Setter;
 
 import lombok.Data;
 

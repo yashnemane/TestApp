@@ -6,17 +6,17 @@ import com.studentform.backend.requestDTOs.registerStudentRequest;
 import com.studentform.backend.requestDTOs.updateStudentRequest;
 import com.studentform.backend.responseDTOs.allStudentsResponse;
 import com.studentform.backend.responseDTOs.deleteStudentResponse;
+import com.studentform.backend.responseDTOs.getStudentMarksResponse;
 import com.studentform.backend.responseDTOs.getStudentResponse;
 import com.studentform.backend.responseDTOs.registerStudentResponse;
 import com.studentform.backend.responseDTOs.updateStudentResponse;
 import com.studentform.backend.service.StudentService;
 
-import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import lombok.Setter;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,6 +25,21 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private static final String API_URL = "https://demo3839297.mockable.io/getStudentMarks";
+
+    public StudentServiceImpl(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    @Override
+    public List<getStudentMarksResponse> getStudentMarks() {
+        getStudentMarksResponse[] response = restTemplate.getForObject(API_URL, getStudentMarksResponse[].class);
+        return Arrays.asList(response);
+    }
 
     @Override
     public allStudentsResponse getAllStudents() {
